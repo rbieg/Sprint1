@@ -27,7 +27,7 @@ class Ingredient(models.Model):
     cooking_method_choices = [
         ('baking', 'Baking'),
         ('grilling', 'Grilling'),
-        ('sauteing', 'Sautéing'),
+        ('sautéing', 'Sautéing'),
         ('boiling', 'Boiling'),
         ('microwaving', 'Microwaving'),
         # Add more cooking methods as needed
