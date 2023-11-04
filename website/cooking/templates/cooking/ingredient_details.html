@@ -1,22 +1,12 @@
 
-{% extends 'portfolio_app/base_template.html' %}
+{% extends 'cooking/base_template.html' %}
 
 {% block content %}
-  <h1>Portfolio Name: {{ portfolio.name }}</h1>
+  <h1> Name: {{ ingredient.name }}</h1>
 
-  <p><strong>Email:</strong> {{ portfolio.contact_email }}</p>
-  <p><strong>Is Active:</strong> {{ portfolio.is_active }}</p>
+  <p><strong>Name:</strong> {{ ingredient.name }}</p>
+  <p><strong>Description:</strong> {{ ingredient.description }}</p>
 
-  <h2>Related Projects:</h2>
-  <ul>
-    {% for project in related_projects %}
-      <li>
-        {{ project.title }}:
-        <a class="btn btn-primary" href="{{ project.get_absolute_url }}" role="button">View</a>
-        <a href="{% url 'delete_project' project.id %}" class="btn btn-danger">Delete Project</a>
-        <a href="{% url 'update_project' project.id %}" class="btn btn-primary">Update Project</a>
-      </li>
-    {% endfor %}
-  </ul>
-  <a href="{{ portfolio.get_absolute_url }}" class="btn btn-primary">View Portfolio</a>
+
+  <a href="{{ ingredient.get_absolute_url }}" class="btn btn-primary">View ingredient</a>
 {% endblock %}
