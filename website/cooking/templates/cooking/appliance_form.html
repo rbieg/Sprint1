@@ -1,0 +1,15 @@
+{% extends 'cookingbase_template.html' %}
+
+{% block content %}
+  <h1>Update Appliance</h1>
+
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+
+    <button type="submit" class="btn btn-primary">Update Portfolio</button>
+  </form>
+
+  <a href="{% url 'appliance-detail' appliance.id %}" class="btn btn-secondary">Cancel</a>
+</div>
+{% endblock %}
