@@ -9,39 +9,72 @@ from django.contrib import messages
 def delete_appliance(request, appliance_id):
     appliance = Appliance.objects.get(pk=appliance_id)
     return render(request, 'cooking/appliance_confirm_delete.html', {'appliance': appliance})
+
+
+def create_appliance(request):
+    # Handle form submission to create a new appliance
+    if request.method == 'POST':
+        form = ApplianceForm(request.POST)
+        if form.is_valid():
+            appliance = form.save()
+            return redirect('appliance-detail', appliance.id)
+    else:
+        form = ApplianceForm()
+    return render(request, 'appliance_form.html', {'form': form})
+
 def update_appliance(request, appliance_id):
+    # Handle updating an existing appliance
     appliance = Appliance.objects.get(pk=appliance_id)
-    form = ApplianceForm(instance=appliance)
     if request.method == 'POST':
-        form = Appliance(request.POST, instance=appliance)
+        form = ApplianceForm(request.POST, instance=appliance)
         if form.is_valid():
             form.save()
-            return redirect('appliance-detail', appliance_id)
-    return render(request, 'cooking/appliance_form.html', {'form': form})
+            return redirect('appliance-detail', appliance.id)
+    else:
+        form = ApplianceForm(instance=appliance)
+    return render(request, 'appliance_form.html', {'form': form, 'appliance': appliance})
+
+def delete_appliance(request, appliance_id):
+    # Handle deleting an appliance
+    appliance = Appliance.objects.get(pk=appliance_id)
+    if request.method == 'POST':
+        appliance.delete()
+        return redirect('appliance-list')
+    return render(request, 'appliance_confirm_delete.html', {'appliance': appliance})
+
+def create_ingredient(request):
+    # Handle form submission to create a new ingredient
+    if request.method == 'POST':
+        form = IngredientForm(request.POST)
+        if form.is_valid():
+            ingredient = form.save()
+            return redirect('ingredient-detail', ingredient.id)
+    else:
+        form = IngredientForm()
+    return render(request, 'ingredient_form.html', {'form': form})
+
 def update_ingredient(request, ingredient_id):
+    # Handle updating an existing ingredient
     ingredient = Ingredient.objects.get(pk=ingredient_id)
-    form = IngredientForm(instance=ingredient)
     if request.method == 'POST':
-        form = Appliance(request.POST, instance=ingredient)
+        form = IngredientForm(request.POST, instance=ingredient)
         if form.is_valid():
             form.save()
-            return redirect('ingredient-detail', ingredient_id)
-    return render(request, 'cooking/ingrediente_form.html', {'form': form})
+            return redirect('ingredient-detail', ingredient.id)
+    else:
+        form = IngredientForm(instance=ingredient)
+    return render(request, 'ingredient_form.html', {'form': form, 'ingredient': ingredient})
+
+def delete_ingredient(request, ingredient_id):
+    # Handle deleting an ingredient
+    ingredient = Ingredient.objects.get(pk=ingredient_id)
+    if request.method == 'POST':
+        ingredient.delete()
+        return redirect('ingredient-list')
+    return render(request, 'ingredient_confirm_delete.html', {'ingredient': ingredient})
 
 def index(request):
     return render(request, 'cooking/index.html')
-
-def create_appliance(request, appliance_id):
-    form = ApplianceForm() 
-    if request.method == 'POST':
-        # Create a new dictionary with form data and portfolio_id
-        appliance_data = request.POST.copy()
-        appliance_data['appliance_id'] = appliance_id
-        form = ApplianceForm(appliance_data)
-        if form.is_valid():
-            return redirect('appliance-detail', appliance_id)
-    context = {'form': form}
-    return render(request, 'cooking/project_form.html', context)
     
 class ApplianceListView(generic.ListView):
     model = Appliance
@@ -51,8 +84,9 @@ class ApplianceDetailView(generic.DetailView):
         context = super().get_context_data(**kwargs)
         return context
     
-class IngredientListView(generic.DetailView):
+class IngredientListView(generic.ListView):
     model = Ingredient
+
 class IngredientDetailView(generic.DetailView):
     model = Ingredient
     template_name = 'cooking/ingredient_detail.html'
