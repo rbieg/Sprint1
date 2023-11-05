@@ -5,34 +5,26 @@ from django.views import generic
 from .forms import IngredientForm, ApplianceForm
 from django.contrib import messages
 # Create your views here.
-
-def delete_appliance(request, appliance_id):
-    appliance = Appliance.objects.get(pk=appliance_id)
-    return render(request, 'cooking/appliance_confirm_delete.html', {'appliance': appliance})
-
-
 def create_appliance(request):
-    # Handle form submission to create a new appliance
     if request.method == 'POST':
         form = ApplianceForm(request.POST)
         if form.is_valid():
             appliance = form.save()
-            return redirect('appliance-detail', appliance.id)
+            return redirect('appliance-detail', pk=appliance.id)
     else:
         form = ApplianceForm()
-    return render(request, 'appliance_form.html', {'form': form})
+    return render(request, 'cooking/appliance_form.html', {'form': form})
 
 def update_appliance(request, appliance_id):
-    # Handle updating an existing appliance
     appliance = Appliance.objects.get(pk=appliance_id)
     if request.method == 'POST':
         form = ApplianceForm(request.POST, instance=appliance)
         if form.is_valid():
             form.save()
-            return redirect('appliance-detail', appliance.id)
+            return redirect('appliance-detail', pk=appliance.id)
     else:
         form = ApplianceForm(instance=appliance)
-    return render(request, 'appliance_form.html', {'form': form, 'appliance': appliance})
+    return render(request, 'cooking/appliance_form.html', {'form': form, 'appliance': appliance})
 
 def delete_appliance(request, appliance_id):
     # Handle deleting an appliance
@@ -40,7 +32,7 @@ def delete_appliance(request, appliance_id):
     if request.method == 'POST':
         appliance.delete()
         return redirect('appliance-list')
-    return render(request, 'appliance_confirm_delete.html', {'appliance': appliance})
+    return render(request, 'cooking/appliance_confirm_delete.html', {'appliance': appliance})
 
 def create_ingredient(request):
     # Handle form submission to create a new ingredient
@@ -51,7 +43,7 @@ def create_ingredient(request):
             return redirect('ingredient-detail', ingredient.id)
     else:
         form = IngredientForm()
-    return render(request, 'ingredient_form.html', {'form': form})
+    return render(request, 'cooking/ingredient_form.html', {'form': form})
 
 def update_ingredient(request, ingredient_id):
     # Handle updating an existing ingredient
@@ -63,7 +55,7 @@ def update_ingredient(request, ingredient_id):
             return redirect('ingredient-detail', ingredient.id)
     else:
         form = IngredientForm(instance=ingredient)
-    return render(request, 'ingredient_form.html', {'form': form, 'ingredient': ingredient})
+    return render(request, 'cooking/ingredient_form.html', {'form': form, 'ingredient': ingredient})
 
 def delete_ingredient(request, ingredient_id):
     # Handle deleting an ingredient
@@ -71,7 +63,7 @@ def delete_ingredient(request, ingredient_id):
     if request.method == 'POST':
         ingredient.delete()
         return redirect('ingredient-list')
-    return render(request, 'ingredient_confirm_delete.html', {'ingredient': ingredient})
+    return render(request, 'cooking/ingredient_confirm_delete.html', {'ingredient': ingredient})
 
 def index(request):
     return render(request, 'cooking/index.html')
@@ -80,6 +72,7 @@ class ApplianceListView(generic.ListView):
     model = Appliance
 class ApplianceDetailView(generic.DetailView):
     model = Appliance
+    template_name = 'cooking/appliance_detail.html'
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         return context
